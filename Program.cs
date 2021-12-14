@@ -4,38 +4,55 @@ namespace QuadraticEquation
 {
     class Program
     {
+        public static bool GetUserChoice(string requestMessage)
+        {
+            Console.WriteLine(requestMessage);
+            string userAnswer = Console.ReadLine();
+
+            while (true)
+            {
+                if (userAnswer.ToLower() == "да")
+                {
+                    return true;
+                }
+                else if (userAnswer.ToLower() == "нет")
+                {
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine($"Нужно ввести 'да' или 'нет', будьте внимательны");
+                }
+            }
+
+        }
         public static void Main(string[] args)
         {
-            string name, isNewEquationSolutionNeededStr, isNewNameNeededStr;
+
             //Ввод имени пользователя
             Console.WriteLine("Здравствуйте, как к вам обращаться?");
-            name = Console.ReadLine();
-            //возможность решить еще уравнения 
-            do
+            string name = Console.ReadLine();
+
+            //возможность решить еще уравнения
+            while (true)
             {
-                Console.WriteLine("Хотите решить уравнение? (впишите 'да' или 'нет')");
-                isNewEquationSolutionNeededStr = Console.ReadLine();
-                switch (isNewEquationSolutionNeededStr)
+                Equal(name);
+                bool isNewEquationSolutionNeeded = GetUserChoice($"{name}, хотите решить еще одно уравнение?");
+                if (!isNewEquationSolutionNeeded)
                 {
-                    case "да":              //TODO Смена пользователя (?Как сделать выбор из вариантов да или нет чтобы исключить ошибки ввода?)
-                        Console.WriteLine("Хотите сменить пользователя? (впишите да или нет)");
-                        isNewNameNeededStr = Console.ReadLine();
-                        if (isNewNameNeededStr == "да")
-                        {
-                            Console.WriteLine("Введите имя нового пользователя");               // TODO При первом же решении предлагает сменить пользователя, хуета
-                            name = Console.ReadLine();
-                        }
-                        Equ(name);
-                        break;
-                    case "нет":
-                        break;
-                    default:
-                        Console.WriteLine("Чет ты хуйню написал, попробуй еще раз (может не стоит писать с заглавной буквы)");
-                        break;
+                    break;
                 }
-            } while (!(isNewEquationSolutionNeededStr == "нет"));
+
+                bool isNewNameNeeded = GetUserChoice($"{name}, хотите изменить имя пользователя?");
+                if (isNewNameNeeded)
+                {
+                    Console.WriteLine("Введите имя нового пользователя");
+                    name = Console.ReadLine();
+                }
+            }
             Console.ReadKey();
         }
+
 
         static double GetDoubleUserInput(string requestMessage, string errorMessage, bool isCanBeZero = true)
         {
@@ -49,18 +66,16 @@ namespace QuadraticEquation
 
                 if (isInputCorrect && (isCanBeZero || correctInput != 0))
                 {
-                    break;
+                    return correctInput;
                 }
                 else
                 {
                     Console.WriteLine(errorMessage);
                 }
             }
-
-            return correctInput;
         }
 
-        static void Equ(string name)
+        static void Equal(string name)
         {
             // Create templates
             string requestMessageTemplate = $"{name}, введи значение '{{0}}'";
