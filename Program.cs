@@ -36,68 +36,68 @@ namespace QuadraticEquation
             } while (!(isNewEquationSolutionNeededStr == "нет"));
             Console.ReadKey();
         }
+
+        static double GetDoubleUserInput(string requestMessage, string errorMessage, bool isCanBeZero = true)
+        {
+            double correctInput;
+
+            while (true)
+            {
+                Console.WriteLine(requestMessage);
+                string inputString = Console.ReadLine();
+                bool isInputCorrect = double.TryParse(inputString, out correctInput);
+
+                if (isInputCorrect && (isCanBeZero || correctInput != 0))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine(errorMessage);
+                }
+            }
+
+            return correctInput;
+        }
+
         static void Equ(string name)
         {
+            // Create templates
+            string requestMessageTemplate = $"{name}, введи значение '{{0}}'";
+            string errorMessageTemplate = "Значение '{0}' должно быть обычным дробным числом (без печатных символов, восклицательных знаков и гнилого банана в кармане){1}";
 
-            double a, b, c, x1, x2;
-            string aStr, bStr, cStr;
-            //проверка корректности ввода a
-            Console.WriteLine("Введи значение a, " + name);
-            aStr = Console.ReadLine();
-            bool isInputCorrect = double.TryParse(aStr, out a);
-            while (isInputCorrect == false)
-            {
-                Console.WriteLine("Значение a должно быть обычным дробным числом (без символов, восклицательных знаков и гнилого банана в кармане) ");
-                Console.WriteLine("Введи значение a, " + name);
-                aStr = Console.ReadLine();
-                isInputCorrect = double.TryParse(aStr, out a);
+            // Get 'a'
+            string aRequestMessage = string.Format(requestMessageTemplate, "a");
+            string aErrorMessage = string.Format(errorMessageTemplate, "a", " и не равняться нулю");
+            double a = GetDoubleUserInput(aRequestMessage, aErrorMessage, false);
 
-            }
+            // Get 'b'
+            string bRequestMessage = string.Format(requestMessageTemplate, "b");
+            string bErrorMessage = string.Format(errorMessageTemplate, "b", "");
+            double b = GetDoubleUserInput(bRequestMessage, bErrorMessage);
 
-            a = Convert.ToDouble(aStr);
-            //проверка корректности ввода b
-            Console.WriteLine("Введи значение b, " + name);
-            bStr = Console.ReadLine();
-            isInputCorrect = double.TryParse(bStr, out b);
-            while (isInputCorrect == false)
-            {
-                Console.WriteLine("Значение b должно быть обычным дробным числом (без символов, восклицательных знаков и гнилого банана в кармане) ");
-                Console.WriteLine("Введи значение b, " + name);
-                bStr = Console.ReadLine();
-                isInputCorrect = double.TryParse(bStr, out b);
-            }
-            b = Convert.ToDouble(bStr);
-            //проверка корректности ввода c
-            Console.WriteLine("Введи значение c, " + name);
-            cStr = Console.ReadLine();
-            isInputCorrect = double.TryParse(cStr, out c);
-            while (isInputCorrect == false)
-            {
-                Console.WriteLine("Значение c должно быть обычным дробным числом (без печатных символов, восклицательных знаков и гнилого банана в кармане) ");
-                Console.WriteLine("Введи значение c, " + name);
-                cStr = Console.ReadLine();
-                isInputCorrect = double.TryParse(cStr, out c);
-            }
-            c = Convert.ToDouble(cStr);
+            // Get 'c'
+            string cRequestMessage = string.Format(requestMessageTemplate, "c");
+            string cErrorMessage = string.Format(errorMessageTemplate, "c", "");
+            double c = GetDoubleUserInput(cRequestMessage, cErrorMessage);
+
             //подсчет дискриминанта
             double D = b * b - 4 * a * c;
-            //D>0
+
             if (D > 0)
             {
-                x1 = (-b + Math.Sqrt(D)) / (2 * a);
-                x2 = (-b - Math.Sqrt(D)) / (2 * a);
-                Console.WriteLine(name + ", мы рады сообщить вам, что решениями уравнения являются корень x1 = " + x1 + " и корень x2 = " + x2);
+                double x1 = (-b + Math.Sqrt(D)) / (2 * a);
+                double x2 = (-b - Math.Sqrt(D)) / (2 * a);
+                Console.WriteLine($"{name}, мы рады сообщить вам, что решениями уравнения являются корень x1 = {x1} и корень x2 = {x2}");
             }
-            //D==0
             else if (D == 0)
             {
-                x1 = -b / (2 * a);
-                Console.WriteLine(name + ", мы рады сообщить вам, что решением уравнения является корень x = " + x1);
+                double x1 = -b / (2 * a);
+                Console.WriteLine($"{name}, мы рады сообщить вам, что решением уравнения является корень x = {x1}");
             }
-            //D<0
             else
             {
-                Console.WriteLine(name + ", к сожалению уравнение не имеет корней");
+                Console.WriteLine($"{name}, к сожалению уравнение не имеет корней");
             }
         }
     }
